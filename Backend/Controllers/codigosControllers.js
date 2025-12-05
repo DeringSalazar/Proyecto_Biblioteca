@@ -8,14 +8,14 @@ class CodigosController {
       const codigos = await CodigosService.getCodigosByUser(userId);
       return res.status(200).json({
         success: true,
-        message: 'Codes obtained correctly',
+        message: 'Codigo obtenidos correctamente',
         codigos: codigos
       });
     } catch (error) {
       console.error('Error en getMyCodeos:', error);
       return res.status(500).json({
         success: false,
-        message: 'Error obtaining codes',
+        message: 'Error al obtener los codigos',
         error: error.message
       });
     }
@@ -86,14 +86,14 @@ class CodigosController {
 
       return res.status(201).json({
         success: true,
-        message: 'Code created successfully',
+        message: 'Codigo creado exitosamente',
         codigo: createdCodigo
       });
     } catch (error) {
-      console.error('Error in createCodigo:', error);
+      console.error('Error en createCodigo:', error);
       return res.status(500).json({
         success: false,
-        message: 'Error creating code',
+        message: 'Error creando el codigo',
         error: error.message
       });
     }
@@ -119,16 +119,16 @@ class CodigosController {
 
       return res.status(200).json({
         success: true,
-        message: 'Code updated successfully',
+        message: 'Codigo actualizado correctamente',
         codigo: updatedCodigo
       });
     } catch (error) {
-      console.error('Error in updateCodigo:', error);
+      console.error('Error en updateCodigo:', error);
       
       if (error.code === 'NOT_FOUND') {
         return res.status(404).json({
           success: false,
-          message: 'Code not found',
+          message: 'Codigo no encontrado',
           error: error.message
         });
       }
@@ -136,14 +136,14 @@ class CodigosController {
       if (error.code === 'FORBIDDEN') {
         return res.status(403).json({
           success: false,
-          message: 'Only the author can modify this code',
+          message: 'solo el autor puede actualizar este codigo',
           error: error.message
         });
       }
       
       return res.status(500).json({
         success: false,
-        message: 'Error updating code',
+        message: 'Error actualizando el codigo',
         error: error.message
       });
     }
@@ -160,21 +160,21 @@ class CodigosController {
       if (!deleted) {
         return res.status(404).json({
           success: false,
-          message: 'Code not found'
+          message: 'Codigo no encontrado'
         });
       }
 
       return res.status(200).json({
         success: true,
-        message: 'Code deleted successfully'
+        message: 'Codigo eliminado correctamente'
       });
     } catch (error) {
-      console.error('Error in deleteCodigo:', error);
+      console.error('Error en deleteCodigo:', error);
       
       if (error.code === 'NOT_FOUND') {
         return res.status(404).json({
           success: false,
-          message: 'Code not found',
+          message: 'Codigo no encontrado',
           error: error.message
         });
       }
@@ -182,14 +182,14 @@ class CodigosController {
       if (error.code === 'FORBIDDEN') {
         return res.status(403).json({
           success: false,
-          message: 'Only the author can delete this code',
+          message: 'solo el autor puede eliminar este codigo',
           error: error.message
         });
       }
       
       return res.status(500).json({
         success: false,
-        message: 'Error deleting code',
+        message: 'Error eliminando el codigo',
         error: error.message
       });
     }
@@ -202,14 +202,14 @@ class CodigosController {
       
       return res.status(200).json({
         success: true,
-        message: 'Codes obtained correctly',
+        message: 'Codigos obtenidos correctamente',
         codigos: codigos
       });
     } catch (error) {
-      console.error('Error in getCodigosByTag:', error);
+      console.error('Error en getCodigosByTag:', error);
       return res.status(500).json({
         success: false,
-        message: 'Error obtaining codes by tag',
+        message: 'Error obteniendo los codigos',
         error: error.message
       });
     }
@@ -224,7 +224,7 @@ class CodigosController {
       if (!codigoId || !coleccionId) {
         return res.status(400).json({
           success: false,
-          message: 'Required fields: codigoId, coleccionId'
+          message: 'requiere los codigos: codigoId, coleccionId'
         });
       }
 
@@ -232,10 +232,10 @@ class CodigosController {
 
       return res.status(200).json({
         success: true,
-        message: 'Code added to collection successfully'
+        message: 'Codigo agregado a la coleccion correctamente'
       });
     } catch (error) {
-      console.error('Error in addCodigoToColeccion:', error);
+      console.error('Error en addCodigoToColeccion:', error);
       
       if (error.code === 'NOT_FOUND') {
         return res.status(404).json({
@@ -255,7 +255,7 @@ class CodigosController {
       
       return res.status(500).json({
         success: false,
-        message: 'Error adding code to collection',
+        message: 'Error añadiendo el codigo a la coleccion',
         error: error.message
       });
     }
@@ -270,7 +270,7 @@ class CodigosController {
       if (!codigoId || !coleccionId) {
         return res.status(400).json({
           success: false,
-          message: 'Required fields: codigoId, coleccionId'
+          message: 'Campos requeridos: codigoId, coleccionId'
         });
       }
 
@@ -279,13 +279,13 @@ class CodigosController {
       if (!deleted) {
         return res.status(404).json({
           success: false,
-          message: 'Code not found in collection'
+          message: 'Codigo no encontrado en la coleccion'
         });
       }
 
       return res.status(200).json({
         success: true,
-        message: 'Code removed from collection successfully'
+        message: 'Codigo removido de la coleccion correctamente'
       });
     } catch (error) {
       console.error('Error in removeCodigoFromColeccion:', error);
@@ -308,7 +308,7 @@ class CodigosController {
       
       return res.status(500).json({
         success: false,
-        message: 'Error removing code from collection',
+        message: 'Error removiendo el codigo de la coleccion',
         error: error.message
       });
     }
@@ -324,16 +324,16 @@ class CodigosController {
       
       return res.status(200).json({
         success: true,
-        message: 'Collections obtained correctly',
+        message: 'Colecciones obtenidos correctamente',
         colecciones: colecciones
       });
     } catch (error) {
-      console.error('Error in getColeccionesByCodigoId:', error);
+      console.error('Error en getColeccionesByCodigoId:', error);
       
       if (error.code === 'NOT_FOUND') {
         return res.status(404).json({
           success: false,
-          message: 'Code not found',
+          message: 'Codigo no encontrado',
           error: error.message
         });
       }
@@ -341,14 +341,14 @@ class CodigosController {
       if (error.code === 'FORBIDDEN') {
         return res.status(403).json({
           success: false,
-          message: 'Access denied to this code',
+          message: 'Accesso denegado al codigo',
           error: error.message
         });
       }
       
       return res.status(500).json({
         success: false,
-        message: 'Error obtaining collections',
+        message: 'Error obteniendo las colecciones del codigo',
         error: error.message
       });
     }
