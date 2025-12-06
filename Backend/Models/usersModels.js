@@ -3,10 +3,10 @@ import pool from '../Database/db.js';
 const UsersModel = {
   async findByEmail(email) {
     const [rows] = await pool.execute(
-      'SELECT id_usuario, nombre_completo, email, contrasena, fecha_creacion, rol FROM usuarios WHERE email = ?',
+      'CALL sp_usuarios_search(?)',
       [email]
     );
-    return rows[0];
+    return rows[0][0] || null;
   },
 
   async findById(id) {
@@ -14,55 +14,40 @@ const UsersModel = {
       'SELECT id_usuario, nombre_completo, email, fecha_creacion, rol FROM usuarios WHERE id_usuario = ?',
       [id]
     );
-    return rows[0];
+    return rows[0] || null;
   },
 
   async create({ nombre_completo, email, contrasena, rol }) {
-    const [result] = await pool.execute(
-      'INSERT INTO usuarios (nombre_completo, email, contrasena, rol) VALUES (?, ?, ?, ?)',
+    await pool.execute(
+      'CALL sp_usuarios_create(?, ?, ?, ?)',
       [nombre_completo, email, contrasena, rol || 'usuario']
     );
-    return this.findById(result.insertId);
+
+    const [rows] = await pool.execute('SELECT * FROM usuarios ORDER BY id_usuario DESC LIMIT 1');
+    return rows[0];
   },
 
-  async update(id, fields) {
-    const updates = [];
-    const values = [];
-    for (const [k, v] of Object.entries(fields)) {
-      updates.push(`${k} = ?`);
-      values.push(v);
-    }
-    if (updates.length === 0) return this.findById(id);
-
-    values.push(id);
-    const sql = `UPDATE usuarios SET ${updates.join(', ')} WHERE id_usuario = ?`;
-    const [result] = await pool.execute(sql, values);
-    if (result.affectedRows === 0) return null;
+  async update(id, { nombre_completo, email, contrasena, rol }) {
+    await pool.execute(
+      'CALL sp_usuarios_update(?, ?, ?, ?, ?)',
+      [id, nombre_completo, email, contrasena, rol]
+    );
     return this.findById(id);
   },
 
   async delete(id) {
-    const [result] = await pool.execute(
-      'DELETE FROM usuarios WHERE id_usuario = ?',
-      [id]
-    );
-    return result.affectedRows > 0;
+    await pool.execute('CALL sp_usuarios_delete(?)', [id]);
+    return true;
   },
 
   async searchByNameOrEmail(q) {
-    const like = `%${q}%`;
-    const [rows] = await pool.execute(
-      'SELECT id_usuario, nombre_completo, email, fecha_creacion, rol FROM usuarios WHERE nombre_completo LIKE ? OR email LIKE ? ORDER BY fecha_creacion DESC',
-      [like, like]
-    );
-    return rows;
+    const [rows] = await pool.execute('CALL sp_usuarios_search(?)', [q]);
+    return rows[0];
   },
 
   async listAll() {
-    const [rows] = await pool.execute(
-      'SELECT id_usuario, nombre_completo, email, fecha_creacion, rol FROM usuarios ORDER BY id_usuario DESC'
-    );
-    return rows;
+    const [rows] = await pool.execute('CALL sp_usuarios_getall()');
+    return rows[0];
   }
 };
 
