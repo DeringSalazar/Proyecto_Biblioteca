@@ -6,10 +6,12 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/codigos:
+ * tags:
+ *   name: Codigos
+ *   description: Endpoints para gestionar Codigos
  *   post:
  *     summary: Crear nuevo código
- *     description: |\n       Crea un nuevo fragmento de código en la biblioteca personal.\n       Campos requeridos: titulo, codigo, lenguaje\n       Los tags ayudan a clasificar y buscar códigos
+ *     description: Crea un nuevo fragmento de código en la biblioteca personal
  *     tags:
  *       - Codigos
  *     security:
@@ -28,34 +30,28 @@ const router = express.Router();
  *               titulo:
  *                 type: string
  *                 example: "Función Suma"
- *                 description: Nombre corto del código (máx 200 caracteres)
  *               descripcion:
  *                 type: string
  *                 example: "Suma dos números"
- *                 description: Explicación del propósito del código
  *               codigo:
  *                 type: string
  *                 example: "function suma(a, b) { return a + b; }"
- *                 description: Contenido del código fuente
  *               lenguaje:
  *                 type: string
  *                 example: "JavaScript"
- *                 description: Lenguaje de programación (JavaScript, Python, Java, etc)
  *               tags:
  *                 type: array
  *                 items:
  *                   type: string
- *                 example: ["javascript", "math", "basico"]
- *                 description: Etiquetas para clasificación y búsqueda
+ *                 example: ["javascript", "math"]
  *               tipo:
  *                 type: string
  *                 example: "function"
- *                 description: Tipo de código (function, snippet, algorithm, error-fix, etc)
  *     responses:
  *       201:
  *         description: Código creado exitosamente
  *       400:
- *         description: Campos requeridos faltantes (titulo, codigo, lenguaje)
+ *         description: Campos requeridos faltantes
  *       401:
  *         description: Token inválido o expirado
  *       500:
@@ -65,10 +61,10 @@ router.post('/', authMiddleware, CodigosController.createCodigo.bind(CodigosCont
 
 /**
  * @swagger
- * /api/codigos/my:
+ * /codigos/my:
  *   get:
  *     summary: Obtener mis códigos
- *     description: |\n       Retorna todos los fragmentos de código creados por el usuario autenticado.\n       Útil para administrar y organizar tu biblioteca personal de códigos.
+ *     description: Retorna todos los códigos creados por el usuario autenticado
  *     tags:
  *       - Codigos
  *     security:
@@ -85,10 +81,10 @@ router.get('/my', authMiddleware, CodigosController.getMyCodeos.bind(CodigosCont
 
 /**
  * @swagger
- * /api/codigos/tags/{tag}:
+ * /codigos/tags/{tag}:
  *   get:
  *     summary: Obtener códigos por etiqueta
- *     description: |\n       Busca y retorna todos los códigos que contengan la etiqueta especificada.\n       Endpoint público (sin autenticación) para descubrir códigos por categoría.
+ *     description: Busca códigos por etiqueta (endpoint público)
  *     tags:
  *       - Codigos
  *     parameters:
@@ -97,11 +93,10 @@ router.get('/my', authMiddleware, CodigosController.getMyCodeos.bind(CodigosCont
  *         required: true
  *         schema:
  *           type: string
- *         example: "javascript"
- *         description: Etiqueta a buscar
+ *         example: javascript
  *     responses:
  *       200:
- *         description: Códigos encontrados exitosamente
+ *         description: Códigos encontrados
  *       500:
  *         description: Error del servidor
  */
@@ -109,10 +104,10 @@ router.get('/tags/:tag', CodigosController.getCodigosByTag.bind(CodigosControlle
 
 /**
  * @swagger
- * /api/codigos/{id}:
+ * /codigos/{id}:
  *   get:
  *     summary: Obtener código por ID
- *     description: |\n       Obtiene un fragmento de código específico con su contenido completo.\n       Solo el autor del código o un admin pueden verlo.
+ *     description: Obtiene un fragmento de código específico
  *     tags:
  *       - Codigos
  *     security:
@@ -124,7 +119,6 @@ router.get('/tags/:tag', CodigosController.getCodigosByTag.bind(CodigosControlle
  *         schema:
  *           type: integer
  *         example: 1
- *         description: ID del código
  *     responses:
  *       200:
  *         description: Código obtenido exitosamente
@@ -141,10 +135,10 @@ router.get('/:id', authMiddleware, CodigosController.getCodigoById.bind(CodigosC
 
 /**
  * @swagger
- * /api/codigos/{id}:
+ * /codigos/{id}:
  *   put:
  *     summary: Actualizar código
- *     description: |\n       Actualiza los datos de un código existente.\n       Solo el autor del código o un admin pueden modificarlo.\n       Puedes actualizar parcialmente (no necesitas enviar todos los campos).
+ *     description: Actualiza los datos de un código existente
  *     tags:
  *       - Codigos
  *     security:
@@ -156,7 +150,6 @@ router.get('/:id', authMiddleware, CodigosController.getCodigoById.bind(CodigosC
  *         schema:
  *           type: integer
  *         example: 1
- *         description: ID del código a actualizar
  *     requestBody:
  *       required: true
  *       content:
@@ -166,7 +159,6 @@ router.get('/:id', authMiddleware, CodigosController.getCodigoById.bind(CodigosC
  *             properties:
  *               titulo:
  *                 type: string
- *                 example: "Función Suma Mejorada"
  *               descripcion:
  *                 type: string
  *               codigo:
@@ -175,8 +167,6 @@ router.get('/:id', authMiddleware, CodigosController.getCodigoById.bind(CodigosC
  *                 type: string
  *               tags:
  *                 type: array
- *                 items:
- *                   type: string
  *               tipo:
  *                 type: string
  *     responses:
@@ -185,7 +175,7 @@ router.get('/:id', authMiddleware, CodigosController.getCodigoById.bind(CodigosC
  *       404:
  *         description: Código no encontrado
  *       403:
- *         description: Solo el autor puede modificar este código
+ *         description: Solo el autor puede modificar
  *       401:
  *         description: Token inválido o expirado
  *       500:
@@ -195,10 +185,10 @@ router.put('/:id', authMiddleware, CodigosController.updateCodigo.bind(CodigosCo
 
 /**
  * @swagger
- * /api/codigos/{id}:
+ * /codigos/{id}:
  *   delete:
  *     summary: Eliminar código
- *     description: |\n       Elimina permanentemente un fragmento de código.\n       Solo el autor del código o un admin pueden eliminarlo.\n       Nota: El código se elimina automáticamente de todas las colecciones.
+ *     description: Elimina permanentemente un fragmento de código
  *     tags:
  *       - Codigos
  *     security:
@@ -210,14 +200,13 @@ router.put('/:id', authMiddleware, CodigosController.updateCodigo.bind(CodigosCo
  *         schema:
  *           type: integer
  *         example: 1
- *         description: ID del código a eliminar
  *     responses:
  *       200:
  *         description: Código eliminado exitosamente
  *       404:
  *         description: Código no encontrado
  *       403:
- *         description: Solo el autor puede eliminar este código
+ *         description: Solo el autor puede eliminar
  *       401:
  *         description: Token inválido o expirado
  *       500:
@@ -227,10 +216,10 @@ router.delete('/:id', authMiddleware, CodigosController.deleteCodigo.bind(Codigo
 
 /**
  * @swagger
- * /api/codigos/colecciones/add:
+ * /codigos/colecciones/add:
  *   post:
  *     summary: Agregar código a colección
- *     description: |\n       Agrega un fragmento de código existente a una colección (relación N:N).\n       El usuario debe ser propietario de la colección.\n       Si el código ya existe en la colección, se actualiza la fecha.
+ *     description: Agrega un código a una colección (relación N:N)
  *     tags:
  *       - Codigos
  *     security:
@@ -248,14 +237,12 @@ router.delete('/:id', authMiddleware, CodigosController.deleteCodigo.bind(Codigo
  *               codigoId:
  *                 type: integer
  *                 example: 1
- *                 description: ID del código a agregar
  *               coleccionId:
  *                 type: integer
  *                 example: 1
- *                 description: ID de la colección
  *     responses:
  *       200:
- *         description: Código agregado a la colección exitosamente
+ *         description: Código agregado a colección exitosamente
  *       404:
  *         description: Código o colección no encontrado
  *       403:
@@ -269,10 +256,10 @@ router.post('/colecciones/add', authMiddleware, CodigosController.addCodigoToCol
 
 /**
  * @swagger
- * /api/codigos/colecciones/remove:
+ * /codigos/colecciones/remove:
  *   post:
  *     summary: Remover código de colección
- *     description: |\n       Elimina un fragmento de código de una colección específica (relación N:N).\n       El usuario debe ser propietario de la colección.\n       El código en sí no se elimina, solo la relación con la colección.
+ *     description: Elimina un código de una colección
  *     tags:
  *       - Codigos
  *     security:
@@ -290,14 +277,12 @@ router.post('/colecciones/add', authMiddleware, CodigosController.addCodigoToCol
  *               codigoId:
  *                 type: integer
  *                 example: 1
- *                 description: ID del código a remover
  *               coleccionId:
  *                 type: integer
  *                 example: 1
- *                 description: ID de la colección
  *     responses:
  *       200:
- *         description: Código removido de la colección exitosamente
+ *         description: Código removido de colección exitosamente
  *       404:
  *         description: Código o colección no encontrado
  *       403:
@@ -311,10 +296,10 @@ router.post('/colecciones/remove', authMiddleware, CodigosController.removeCodig
 
 /**
  * @swagger
- * /api/codigos/{id}/colecciones:
+ * /codigos/{id}/colecciones:
  *   get:
  *     summary: Obtener colecciones de un código
- *     description: |\n       Retorna todas las colecciones que contienen un fragmento de código específico.\n       Solo el autor del código o un admin pueden ver a qué colecciones pertenece.\n       Útil para consultar en qué colecciones se ha organizado un código.
+ *     description: Retorna todas las colecciones que contienen un código
  *     tags:
  *       - Codigos
  *     security:
@@ -326,7 +311,6 @@ router.post('/colecciones/remove', authMiddleware, CodigosController.removeCodig
  *         schema:
  *           type: integer
  *         example: 1
- *         description: ID del código
  *     responses:
  *       200:
  *         description: Colecciones obtenidas exitosamente
