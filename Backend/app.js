@@ -8,6 +8,7 @@ import categories from './Routes/categories.Routes.js';
 import collectionsRoutes from './Routes/collections.Routes.js';
 import codigosRoutes from './Routes/codigos.Routes.js';
 import subscriptionsRoutes from './Routes/subscriptions.Routes.js';
+import codigoCategoriaRoutes from './Routes/codigoCategorias.Routes.js';
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -18,6 +19,7 @@ app.use('/api/categories', categories);
 app.use('/api/collections', collectionsRoutes);
 app.use('/api/codigos', codigosRoutes);
 app.use('/api/subscriptions', subscriptionsRoutes);
+app.use('/api/codigos-categorias', codigoCategoriaRoutes);
 app.use("/api/documentacion", Swagger.serve, Swagger.setup);
 
 (async () => {
