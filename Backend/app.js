@@ -32,6 +32,13 @@ app.use("/api/documentacion", Swagger.serve, Swagger.setup);
     }
 })();
 
+console.log("Variables MySQL:", {
+    host: process.env.MYSQL_ADDON_HOST,
+    user: process.env.MYSQL_ADDON_USER,
+    db: process.env.MYSQL_ADDON_DB,
+    port: process.env.MYSQL_ADDON_PORT
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
