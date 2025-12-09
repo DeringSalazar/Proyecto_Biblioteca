@@ -16,9 +16,6 @@ const UsersController = {
     try {
       const { email, contrasena } = req.body;
       const result = await UsersService.login({ email, contrasena });
-
-       logEvent(`LOGIN OK: ${req.body.email}`);
-
       if (!result) return res.status(401).json({ error: 'Credenciales inválidas' });
       return res.json(result);
     } catch (err) {

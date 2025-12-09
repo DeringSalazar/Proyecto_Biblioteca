@@ -150,7 +150,16 @@ router.post('/', createUserValidation, validate, UsersController.register);
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/login', loginLimiter, createLoginValidator, validate, UsersController.login);
+router.post('/login', loginLimiter,createLoginValidator, validate, async (req, res) => {
+  try {
+    const response = await UsersController.login(req, res);
+    logEvent(`LOGIN OK: ${req.body.email}`);
+    return response; 
+  } catch (err) {
+    logEvent(`LOGIN FAIL: ${req.body.email}`);
+    return res.status(401).json({ error: err.message });
+  }
+});
 
 /**
  * @swagger
