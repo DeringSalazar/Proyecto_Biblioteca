@@ -86,6 +86,46 @@ npm start
 
 El servidor estará disponible en `http://localhost:4000`
 
+## Credenciales de Prueba
+
+Se incluye un usuario de prueba en la base de datos para comenzar:
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | 1 |
+| **Nombre** | Dering Salazar |
+| **Email** | dering.1675@gmail.com |
+| **Contraseña** | dering123@ |
+| **Rol** | admin |
+| **Fecha de Creación** | 2025-11-30 18:08:15 |
+
+**Ejemplo de Login:**
+```bash
+curl -X POST http://localhost:4000/api/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "dering.1675@gmail.com",
+    "password": "dering123@"
+  }'
+```
+
+**Respuesta Esperada:**
+```json
+{
+  "success": true,
+  "message": "Login exitoso",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "nombre": "Dering Salazar",
+    "email": "dering.1675@gmail.com",
+    "rol": "admin"
+  }
+}
+```
+
+Utiliza el token devuelto en el header `Authorization: Bearer <token>` para las siguientes solicitudes.
+
 ## Endpoints de la API
 
 ### URL Base
