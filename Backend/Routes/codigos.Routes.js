@@ -4,6 +4,7 @@ import { authMiddleware } from '../Middleware/authMiddleware.js';
 import { createCodigoValidator } from "../Validators/createCodigoValidator.js";
 import { updateCodigoValidator } from "../Validators/updateCodigoValidator.js";
 import { validate } from "../Middleware/validateMiddleware.js";
+import { allowRoles } from '../Middleware/roleMiddleware.js';
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ const router = express.Router();
  * paths:
  *   /codigos:
  *     post:
- *       summary: Crear nuevo código
+ *       summary: Crear nuevo código  (solo admin)
  *       description: Crea un nuevo fragmento de código en la biblioteca personal
  *       tags:
  *         - Codigos
@@ -65,7 +66,7 @@ const router = express.Router();
  *         '500':
  *           description: Error del servidor
  */
-router.post('/', authMiddleware, createCodigoValidator, validate, CodigosController.createCodigo.bind(CodigosController));
+router.post('/', authMiddleware, allowRoles('admin'), createCodigoValidator, validate, CodigosController.createCodigo.bind(CodigosController));
 
 /**
  * @swagger
