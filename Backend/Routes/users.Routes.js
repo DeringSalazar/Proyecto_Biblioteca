@@ -4,6 +4,10 @@ import { logEvent } from '../utils/logger.js';
 import UsersController from '../Controllers/usersControllers.js';
 import { authMiddleware } from '../Middleware/authMiddleware.js';
 import { allowRoles } from '../Middleware/roleMiddleware.js';
+import { createUserValidation } from '../Validators/createUserValidator.js'; 
+import { createLoginValidator } from '../Validators/createLoginValidator.js';
+import { updateUserValidator } from '../Validators/updateUserValidator.js';
+import { validate } from '../Middleware/validateMiddleware.js';
 
 const router = express.Router();
 
@@ -53,14 +57,20 @@ const loginLimiter = rateLimit({
  *       properties:
  *         nombre_completo:
  *           type: string
+ *           example: Marcos Herrera M.
  *         email:
  *           type: string
+ *           example: mherrera@utn.cr
  *         contrasena:
  *           type: string
+ *           format: password
+ *           example: ""
  *         rol:
  *           type: string
- *           enum: [admin, usuario]
- *
+ *           enum: 
+ *              - usuario
+ *              - admin
+ * 
  *     LoginUser:
  *       type: object
  *       required:
@@ -118,7 +128,7 @@ const loginLimiter = rateLimit({
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/', UsersController.register);
+router.post('/', createUserValidation, validate, UsersController.register);
 
 /**
  * @swagger
@@ -140,16 +150,7 @@ router.post('/', UsersController.register);
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/login', loginLimiter, async (req, res) => {
-  try {
-    const response = await UsersController.login(req, res);
-    logEvent(`LOGIN OK: ${req.body.email}`);
-    return response; 
-  } catch (err) {
-    logEvent(`LOGIN FAIL: ${req.body.email}`);
-    return res.status(401).json({ error: err.message });
-  }
-});
+router.post('/login', loginLimiter, createLoginValidator, validate, UsersController.login);
 
 /**
  * @swagger
@@ -198,7 +199,7 @@ router.get('/me', authMiddleware, UsersController.getProfile);
  * @swagger
  * /users/{id}:
  *   put:
- *     summary: Actualiza un usuario
+ *     summary: Actualiza un usuario (solo admin)
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -230,7 +231,8 @@ router.get('/me', authMiddleware, UsersController.getProfile);
  *       500:
  *         description: Error interno del servidor
  */
-router.put('/:id', authMiddleware, UsersController.updateProfile);
+router.put('/:id', authMiddleware, allowRoles('admin'), updateUserValidator, validate, UsersController.updateProfile
+);
 
 /**
  * @swagger

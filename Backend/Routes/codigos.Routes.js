@@ -1,6 +1,9 @@
 import express from 'express';
 import CodigosController from '../Controllers/codigosControllers.js';
 import { authMiddleware } from '../Middleware/authMiddleware.js';
+import { createCodigoValidator } from "../Validators/createCodigoValidator.js";
+import { updateCodigoValidator } from "../Validators/updateCodigoValidator.js";
+import { validate } from "../Middleware/validateMiddleware.js";
 
 const router = express.Router();
 
@@ -62,7 +65,7 @@ const router = express.Router();
  *         '500':
  *           description: Error del servidor
  */
-router.post('/', authMiddleware, CodigosController.createCodigo.bind(CodigosController));
+router.post('/', authMiddleware, createCodigoValidator, validate, CodigosController.createCodigo.bind(CodigosController));
 
 /**
  * @swagger
@@ -172,6 +175,9 @@ router.get('/:id', authMiddleware, CodigosController.getCodigoById.bind(CodigosC
  *                 type: string
  *               tags:
  *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["javascript", "math"]
  *               tipo:
  *                 type: string
  *     responses:
@@ -186,7 +192,7 @@ router.get('/:id', authMiddleware, CodigosController.getCodigoById.bind(CodigosC
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id', authMiddleware, CodigosController.updateCodigo.bind(CodigosController));
+router.put('/:id',  authMiddleware, updateCodigoValidator, validate, CodigosController.updateCodigo.bind(CodigosController));
 
 /**
  * @swagger

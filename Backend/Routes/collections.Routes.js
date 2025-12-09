@@ -1,6 +1,8 @@
 import { Router } from "express";
 import CollectionsController from "../Controllers/collectionsControllers.js";
 import { authMiddleware } from "../Middleware/authMiddleware.js";
+import { createCollectionValidator } from "../Validators/createCollectionValidator.js";
+import { validate } from "../Middleware/validateMiddleware.js";
 
 const router = Router();
 
@@ -119,7 +121,7 @@ router.get("/", CollectionsController.getMyCollections);
  *       500:
  *         description: Error interno del servidor
  */
-router.post("/", CollectionsController.createCollection);
+router.post("/", createCollectionValidator, validate, CollectionsController.createCollection);
 
 /**
  * @swagger

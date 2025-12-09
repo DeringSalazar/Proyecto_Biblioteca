@@ -27,16 +27,8 @@ class CategoriesServices {
         return result;
     }
 
-    async createCategories(categories) {
-        const { nombre, descripcion, estado } = categories;
-        if (!nombre || !descripcion || !estado) {
-            throw new Error("Data is missing: nombre, descripcion, estado");
-        }
-        const validStates = ['activo', 'inactivo'];
-        if (!validStates.includes(estado)) {
-            throw new Error("Invalid value for estado. Must be 'activo' or 'inactivo'");
-        }
-        const result = await categoriesModels.createCategory(categories);
+    async createCategories(payload) {
+        const result = await categoriesModels.createCategory(payload);
         return result;
     }
 

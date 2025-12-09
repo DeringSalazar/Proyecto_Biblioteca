@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import subscriptionsController from '../Controllers/subscriptionsControllers.js';
 import { authMiddleware } from '../Middleware/authMiddleware.js';
+import { createSuscripcionesValidator } from '../Validators/createSuscripcionesValidator.js';
+import { updateSuscripcionesValidator } from '../Validators/updateSuscripcionesValidator.js';  
+import { validate } from "../Middleware/validateMiddleware.js";
 const router = Router();
 
 /**
@@ -194,7 +197,7 @@ router.get('/feed/user/:id', subscriptionsController.getFeedByUser);
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/', subscriptionsController.createSubscription);
+router.post('/', authMiddleware,  createSuscripcionesValidator, validate, subscriptionsController.createSubscription);
 
 /**
  * @swagger
@@ -223,7 +226,7 @@ router.post('/', subscriptionsController.createSubscription);
  *       500:
  *         description: Error interno del servidor
  */
-router.put('/', subscriptionsController.updateSubscription);
+router.put('/', authMiddleware, updateSuscripcionesValidator, validate, subscriptionsController.updateSubscription);
 
 /**
  * @swagger

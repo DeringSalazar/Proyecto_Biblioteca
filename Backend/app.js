@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import errorHandler from './Middleware/errorMiddleware.js';
 import pool from './Database/db.js';
 import Swagger from './src/Swagger.js';
 import usersRoutes from './Routes/users.Routes.js';
@@ -9,6 +10,7 @@ import collectionsRoutes from './Routes/collections.Routes.js';
 import codigosRoutes from './Routes/codigos.Routes.js';
 import subscriptionsRoutes from './Routes/subscriptions.Routes.js';
 import codigoCategoriaRoutes from './Routes/codigoCategorias.Routes.js';
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -31,6 +33,8 @@ app.use("/api/documentacion", Swagger.serve, Swagger.setup);
         console.error('Error conectando a MySQL:', error);
     }
 })();
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);

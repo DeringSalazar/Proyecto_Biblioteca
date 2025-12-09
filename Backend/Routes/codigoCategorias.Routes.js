@@ -7,6 +7,8 @@
 
 import express from 'express';
 import CodigoCategoriaController from '../Controllers/codigoCategoriaControllers.js';
+import { createCodigoCategoriaValidator } from '../Validators/createCodigoCategoriaValidator.js';
+import { validate } from "../Middleware/validateMiddleware.js";
 import { authMiddleware } from '../Middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -57,12 +59,12 @@ const router = express.Router();
  *       500:
  *         description: Error del servidor
  */
-router.post('/add', authMiddleware, CodigoCategoriaController.addCodigoToCategoria);
+router.post('/add', authMiddleware, createCodigoCategoriaValidator, validate, CodigoCategoriaController.addCodigoToCategoria);
 
 /**
  * @swagger
  * /codigos-categorias/remove:
- *   post:
+ *   delete:
  *     summary: Remover código de una categoría
  *     description: Desasocia un código de una categoría específica
  *     tags: [Codigo-Categoría]
@@ -105,7 +107,7 @@ router.post('/add', authMiddleware, CodigoCategoriaController.addCodigoToCategor
  *       500:
  *         description: Error del servidor
  */
-router.post('/remove', authMiddleware, CodigoCategoriaController.removeCodigoFromCategoria);
+router.delete('/remove', authMiddleware, CodigoCategoriaController.removeCodigoFromCategoria);
 
 /**
  * @swagger

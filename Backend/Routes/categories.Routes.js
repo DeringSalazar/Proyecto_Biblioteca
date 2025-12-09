@@ -2,6 +2,9 @@ import { Router } from 'express';
 import categoriesController from '../Controllers/categoriesControllers.js';
 import { authMiddleware } from '../Middleware/authMiddleware.js';
 const router = Router();
+import { createCategoriesValidator } from '../Validators/createCategoriesValidator.js';
+import { updateCategoriesValidator } from '../Validators/updateCategoriesValidator.js';
+import { validate } from '../Middleware/validateMiddleware.js';
 
 /**
  * @swagger
@@ -100,7 +103,7 @@ router.use(authMiddleware);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get('/', categoriesController.getAllCategories);
+router.get('/',categoriesController.getAllCategories);
 
 /**
  * @swagger
@@ -217,7 +220,7 @@ router.get('/code/:id', categoriesController.getCategoriesByCode);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/', categoriesController.createCategories);
+router.post('/',authMiddleware, createCategoriesValidator, validate,categoriesController.createCategories);
 
 /**
  * @swagger
@@ -262,7 +265,7 @@ router.post('/', categoriesController.createCategories);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.put('/', categoriesController.updateCategories);
+router.put('/',authMiddleware, updateCategoriesValidator, validate, categoriesController.updateCategories);
 
 /**
  * @swagger
